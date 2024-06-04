@@ -1,10 +1,10 @@
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 1600 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    width = 750 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
+var svg = d3.select("#temperatureChart")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -34,7 +34,7 @@ const plotLines = (svg, lineData) => {
         .style("stroke-width", d => d.stroke || 5); // Customize line width
 }
 
-// Sample data for connecting lines
+// lines for temperatures
 var lineData = [
 
     // freezing 
@@ -68,58 +68,7 @@ svg.append("g")
     .style("font-size", "16px");
 
 
-const getFreezingMf = (x, a, b, c, d) => {
-    if (x <= c) return 1;
-    if (c <= x && x <= d) return (-0.05*x)+2.5;
-    if (d <= x) return 0;
-}
-
-const getHotMf = (x, a, b, c, d) => {
-    if (x <= a) return 0;
-    if (a <= x && x <= b) return (0.05*x)-3.5;
-    if (b <= x) return 1;
-}
-
-const getCoolMf = (x, a, b, c) => {
-    if (x <= a || x >= c) return 0;
-    if (x >= a && x <= b) return (0.05*x)-1.5;
-    if (x >= b && x <= c) return (-0.05*x)+3.5;
-}
-
-const getWarmMf = (x, a, b, c) => {
-    if (x <= a || x >= c) return 0;
-    if (x >= a && x <= b) return (0.05*x)-2.5;
-    if (x >= b && x <= c) return (-0.05*x)+4.5;
-}
-
-const getMf = (x, freeze, cool, warm, hot) => {
-    const Fs = []
-    
-    let freezingmf = parseFloat(getFreezingMf(x, freeze[0], freeze[1], freeze[2], freeze[3])).toFixed(2);
-    let coolmf = parseFloat(getCoolMf(x, cool[0], cool[1], cool[2])).toFixed(2);
-    let warmmf = parseFloat(getWarmMf(x, warm[0], warm[1], warm[2])).toFixed(2);
-    let hotmf = parseFloat(getHotMf(x, hot[0], hot[1], hot[2], hot[3])).toFixed(2);
-
-    const labels = [];
-
-    if (freezingmf > 0) {
-        Fs.push(freezingmf) 
-        labels.push("Freezing");
-    }
-    if (coolmf > 0) {
-        Fs.push(coolmf) 
-        labels.push("Cool");
-    }
-    if (warmmf > 0) {
-        Fs.push(warmmf) 
-        labels.push("Warm");
-    }
-    if (hotmf > 0) {
-        Fs.push(hotmf) 
-        labels.push("Hot");
-    }
-    return [Fs, labels];
-}
+import { getMf } from "./fuzzyTemp";
 
 freezing_trapmf = [0, 0, 30, 50]
 cool_trimf = [30, 50, 70]
